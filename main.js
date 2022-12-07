@@ -23,39 +23,40 @@ const mystery5 = [4, 9, 1, 3, 5, 4, 0, 4, 6, 3, 0, 7, 2, 5, 2, 3]
 const batch = [valid1, valid2, valid3, valid4, valid5, invalid1, invalid2, invalid3, invalid4, invalid5, mystery1, mystery2, mystery3, mystery4, mystery5]
 
 
-// Add your functions below:
+// This function tests if an array of numbers is valid using luhn algorithm
 
 function validateCred(nums) {
-    let arr = []
-    // console.log((nums.length -1)%2)
+    let arr = [] // items that match the logic below are pushed here to arr
     for (let i = nums.length -1; i >= 0; i--){     
-      //nums.length = odd and number <= 0 and number index = odd 
+      //nums.length-1 = odd and number <= 0 and number index = odd 
       if ((nums.length -1)%2 ===  1 && ((nums[i] * 2) - 9 <= 0) && i%2 === 0)
             {arr.push(nums[i] * 2)}
-      //nums.length = odd and number > 0 and number index = even
+      //nums.length-1 = odd and number > 0 and number index = even
       else if ((nums.length -1)%2 ===  1 && ((nums[i] * 2) - 9 > 0) && i%2 === 0)
             {arr.push(nums[i] * 2 - 9)}
-      //nums.length =  odd and number index = even 
+      //nums.length-1 =  odd and number index = even 
       else if ((nums.length -1)%2 ===  1 && i%2 === 1)
             {arr.push(nums[i])} 
-      //nums.length = even and number <= 0 and number index = odd
+      //nums.length-1 = even and number <= 0 and number index = odd
       else if ((nums.length-1)%2 ===  0 && ((nums[i] * 2) - 9 <= 0) && i%2 === 1)
             {arr.push(nums[i] * 2)}
-      //num.length = even and number > 0 and number index = odd
+      //num.length-1 = even and number > 0 and number index = odd
       else if ((nums.length-1)%2 === 0 && ((nums[i] * 2) - 9 > 0) && i%2 === 1) 
             {arr.push(nums[i] * 2 - 9)}
-      //num.length = even and number index is even
+      //num.length-1 = even and number index is even
       else if ((nums.length-1)%2 === 0 && i%2 === 0)
             {arr.push(nums[i])}
       }
+    // sums each digit packaged into arr from the for loop and checks if it is divisible by 10
     if (arr.reduce((accumulator, currentValue) => accumulator + currentValue, 0) % 10 === 0) {
-        return true
+        return true // divisible by 10
     }
     else {
-        return false
+        return false // not divisible by 10
     }
   };
 
+  //test run on all 15 arrays provided at the start of the project
   console.log('valid check:')
   console.log(validateCred(valid1))
   console.log(validateCred(valid2))
@@ -75,33 +76,39 @@ function validateCred(nums) {
   console.log(validateCred(mystery4))
   console.log(validateCred(mystery5))
 
-
+  // creates a new array of invalid credit card numbers
   function findInvalidCards(nestedArr){
-    let invalidArr = []
+    let invalidArr = [] // where invalid credit card numbers are pushed
+    // checks a sub array of numbers (items) stored in an array (nestedArr)
     for (const item of nestedArr) {
-      // {
+      // item is not divisible by 10
       if (validateCred(item) === false){
         invalidArr.push(item)
       }
-    
     }
-    return invalidArr
+    return invalidArr //outputs all the invalid credit cards stored in invalidArr
     }
-  console.log(findInvalidCards(batch))
+  console.log('\nfindInvalidCards test run: \n',findInvalidCards(batch)) // test run function using batch variable from above
 
-  function idInvalidCardCompanies(funct){
-    let cardCompanies = []
-    let invalids = funct
+  // finds out which companies have issued invalid credit cards
+  function idInvalidCardCompanies(arr){
+    let cardCompanies = [] // stores companies who issued invalid credit card numbers
+    let invalids = findInvalidCards(arr) // variable storing invalid credit card numbers from input array 
     for (let i = 0; i < invalids.length; i++){
+      // first number of credit card = 3 and 'Amex' is not in cardCompanies
       if (invalids[i][0] === 3 && cardCompanies.indexOf('Amex') === -1)
-        {cardCompanies.push('Amex')}
+        {cardCompanies.push('Amex')} // store the string 'Amex' in cardCompanies
+      // first number of credit card = 4 and 'Visa' is not in cardCompanies 
       else if (invalids[i][0] === 4 && cardCompanies.indexOf('Visa') === -1)
-        {cardCompanies.push('Visa')}
+        {cardCompanies.push('Visa')} // store the string 'Visa' in cardCompanies
+      // first number of credit card = 5 and 'Mastercard' is not in cardCompanies
       else if (invalids[i][0] === 5 && cardCompanies.indexOf('Mastercard') === -1)
-        {cardCompanies.push('Mastercard')}
+        {cardCompanies.push('Mastercard')} // store the string 'Mastercard' in cardCompanies
+      // first number of credit card = 6 and 'Discover is not in cardCompanies
       else if (invalids[i][0] === 6 && cardCompanies.indexOf('Discover') === -1)
-        {cardCompanies.push('Discover')}
+        {cardCompanies.push('Discover')} // store the string 'Discover' in cardCompanies
+      else {'company not found'} // the first number of the credit card in not between 3-6
     }
-    return cardCompanies    
+    return cardCompanies // output is companies who issued invalid credit cards (no duplicates)
   }
-  console.log('\n',idInvalidCardCompanies(findInvalidCards(batch)))
+  console.log('\nidInvalidCardCompanies test run:\n',idInvalidCardCompanies(batch)) // test run function using the batch array 
